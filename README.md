@@ -23,7 +23,7 @@ This module will spin up a `p3.2xlarge` in EC2 on the [Deep Learning AMI](https:
     ```
 1. Create an SSH key pair with `ssh-keygen` and add the private key with `ssh-add`.
     ```sh
-    ssh-keygen -t rsa -C "andrew@stem.is" -f ~/.ssh/example_name
+    ssh-keygen -t rsa -C "email@example.org" -f ~/.ssh/example_name
     ssh-add ~/.ssh/example_name
     ```
 1. Go into the `terraform` directory and run `terraform init` and `terraform apply`. You will be prompted to provide the location of your newly generated public SSH key (you can put this in a `terraform.tfvars` instead).
