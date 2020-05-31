@@ -123,7 +123,7 @@ resource "aws_ebs_volume" "tf" {
 # the actual compute instance
 resource "aws_instance" "ec2" {
   # this AMI has python, jupyter, tensorflow, etc preinstalled on Ubuntu!
-  ami = "ami-7336d50e"
+  ami = var.ami
 
   # a type with a beefy GPU is required
   instance_type          = var.instance_type
