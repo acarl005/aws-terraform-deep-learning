@@ -12,8 +12,9 @@ variable "volume_size_gb" {
 
 variable "instance_type" {
   description = "the type of EC2 instance to run."
-  default     = "p3.2xlarge"
   # default     = "p2.xlarge"
+  default = "p2.8xlarge"
+  # default     = "p3.8xlarge"
   # default = "m3.xlarge"
 }
 
