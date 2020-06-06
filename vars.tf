@@ -7,13 +7,14 @@ variable "public_key_file" {
 
 variable "volume_size_gb" {
   description = "number of GB of storage for your volume"
-  default     = 50
+  default     = 150
 }
 
 variable "instance_type" {
   description = "the type of EC2 instance to run."
-  # default     = "p3.2xlarge"
-  default = "m3.xlarge"
+  default     = "p3.2xlarge"
+  # default     = "p2.xlarge"
+  # default = "m3.xlarge"
 }
 
 variable "ami" {
