@@ -5,17 +5,12 @@ variable "public_key_file" {
   description = "file path to RSA public key file, e.g. ~/.ssh/rsa-key.pub (you'll need the associated private key to authenticate via SSH)"
 }
 
-variable "volume_size_gb" {
-  description = "number of GB of storage for your volume"
-  default     = 150
-}
-
 variable "instance_type" {
   description = "the type of EC2 instance to run."
   # default     = "p2.xlarge"
-  default = "p2.8xlarge"
+  # default = "p2.8xlarge"
   # default     = "p3.8xlarge"
-  # default = "m3.xlarge"
+  default = "m3.xlarge"
 }
 
 variable "ami" {

@@ -110,13 +110,26 @@ resource "aws_key_pair" "ssh_key" {
   public_key = file(var.public_key_file)
 }
 
-# a volume to persist our model after training
-resource "aws_ebs_volume" "tf" {
-  availability_zone = local.avail_zone
-  size              = var.volume_size_gb
+resource "aws_efs_file_system" "foo" {
+  creation_token = "Extra Galactic Storage"
 
   tags = {
     Name = "tf"
+  }
+}
+
+# After you create a file system, you can create mount targets and then you
+# can mount the file system on EC2 instances
+resource "aws_efs_mount_target" "alpha" {
+  file_system_id = aws_efs_file_system.foo.id
+  subnet_id      = aws_subnet.tf.id
+}
+
+# Run a script to automount
+data "template_file" "script" {
+  template = file("script.tpl")
+  vars = {
+    efs_id = aws_efs_file_system.foo.id
   }
 }
 
@@ -132,18 +145,14 @@ resource "aws_instance" "ec2" {
   vpc_security_group_ids = [aws_security_group.tf.id]
   key_name               = "ssh_key"
 
+  user_data = data.template_file.script.rendered
+
   tags = {
     Name = "tf"
   }
 }
 
-resource "aws_volume_attachment" "ebs_att" {
-  device_name = "/dev/sdh"
-  volume_id   = aws_ebs_volume.tf.id
-  instance_id = aws_instance.ec2.id
-}
-
-# assign a constant IP that we can reach
+# TODO(zen): Remove the elastic IP in favor of public IP on instance?
 resource "aws_eip" "tf" {
   instance = aws_instance.ec2.id
   vpc      = true
