@@ -14,4 +14,9 @@ chown -R ubuntu: /efs
 # Edit fstab so EFS automatically loads on reboot
 echo $efs_id:/ /efs efs defaults,_netdev 0 0 >> /etc/fstab
 
+# Test that it works!
+mount -fav
+# You should see:
+# /efs                     : successfully mounted
+
 echo "&&&&&&&&&&& Done! EFS Mounted at /efs &&&&&&&&&&&&&&"
