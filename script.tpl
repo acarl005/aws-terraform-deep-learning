@@ -27,3 +27,6 @@ sh -c "$(wget https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/to
 
 # Git LFS
 sudo apt-get install git-lfs
+
+# Ffmpeg
+sudo apt-get install ffmpeg
