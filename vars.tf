@@ -7,10 +7,10 @@ variable "public_key_file" {
 
 variable "instance_type" {
   description = "the type of EC2 instance to run."
-  # default     = "p2.xlarge"
+  default     = "p2.xlarge"
   # default = "p2.8xlarge"
   # default     = "p3.8xlarge"
-  default = "m3.xlarge"
+  # default = "m3.xlarge"
 }
 
 variable "ami" {

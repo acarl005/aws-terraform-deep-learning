@@ -151,14 +151,3 @@ resource "aws_instance" "ec2" {
     Name = "tf"
   }
 }
-
-# TODO(zen): Remove the elastic IP in favor of public IP on instance?
-resource "aws_eip" "tf" {
-  instance = aws_instance.ec2.id
-  vpc      = true
-
-  tags = {
-    Name = "tf"
-  }
-}
-
