@@ -1,6 +1,9 @@
 # Deep Learning Research Setup with Terraform
 
-Get a beefy GPU in AWS quickly.
+## What this gets you
+
+- A beefy GPU on AWS quickly
+- Elastic Filesystem
 
 ## Why you're here
 
