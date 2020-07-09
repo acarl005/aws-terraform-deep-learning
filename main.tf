@@ -104,6 +104,40 @@ resource "aws_security_group" "tf" {
   }
 }
 
+# permit inbound access from ec2 instances
+resource "aws_security_group" "allow_efs" {
+  name   = "efs_security_group"
+  vpc_id = aws_vpc.tf.id
+
+  # allow NFS from the ec2 instances
+  ingress {
+    from_port       = 2049
+    to_port         = 2049
+    protocol        = "tcp"
+    security_groups = [aws_security_group.tf.id]
+  }
+
+  # allow everything from self
+  ingress {
+    protocol  = -1
+    self      = true
+    from_port = 0
+    to_port   = 0
+  }
+
+  # allow everything outbound
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "tf"
+  }
+}
+
 # to permit SSH access
 resource "aws_key_pair" "ssh_key" {
   key_name   = "ssh_key"
@@ -121,15 +155,17 @@ resource "aws_efs_file_system" "foo" {
 # After you create a file system, you can create mount targets and then you
 # can mount the file system on EC2 instances
 resource "aws_efs_mount_target" "alpha" {
-  file_system_id = aws_efs_file_system.foo.id
-  subnet_id      = aws_subnet.tf.id
+  file_system_id  = aws_efs_file_system.foo.id
+  subnet_id       = aws_subnet.tf.id
+  security_groups = [aws_security_group.allow_efs.id]
 }
 
 # Run a script to automount
 data "template_file" "script" {
-  template = file("script.tpl")
+  template = file("user-data-template.yml")
   vars = {
-    efs_id = aws_efs_file_system.foo.id
+    efs_dns         = aws_efs_mount_target.alpha.dns_name
+    efs_mount_point = "/efs"
   }
 }
 

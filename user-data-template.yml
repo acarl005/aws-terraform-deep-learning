@@ -1,0 +1,27 @@
+#cloud-config
+#in aws, the output of this script is written to /var/log/cloud-init-output.log
+repo_update: true
+repo_upgrade: all
+runcmd:
+
+- echo ">>>>>>>>>>>>>>>>>>>>>>>>>> Installing packages"
+- yum install -y amazon-efs-utils
+- apt-get -y install amazon-efs-utils
+- yum install -y nfs-utils
+- apt-get -y install nfs-common
+- efs_dns="${efs_dns}"
+- efs_mount_point="${efs_mount_point}"
+
+- echo ">>>>>>>>>>>>>>>>>>>>>>>>>> Mounting EFS"
+- mkdir -p "${efs_mount_point}"
+- test -f "/sbin/mount.efs" && echo "\n$${efs_dns}:/ $${efs_mount_point} efs tls,_netdev" >> /etc/fstab || echo "\n$${efs_dns}:/ $${efs_mount_point} nfs4 nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport,_netdev 0 0" >> /etc/fstab
+- test -f "/sbin/mount.efs" && echo "\n[client-info]\nsource=liw" >> /etc/amazon/efs/efs-utils.conf
+- mount -a -t efs,nfs4 defaults
+
+- echo ">>>>>>>>>>>>>>>>>>>>>>>>>> Installing zsh + friends"
+- apt-get install -y zsh
+- chsh -s /usr/bin/zsh ubuntu
+- /bin/su -c "$(wget https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)" - ubuntu
+- echo "set-option -g default-shell /usr/bin/zsh" >> ~/.tmux.conf
+- apt-get install -y git-lfs
+- apt-get install -y ffmpeg
